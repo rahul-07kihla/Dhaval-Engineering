@@ -1,0 +1,257 @@
+@use "../util" as u;
+.companies {
+  width: 80vw;
+  height: 100vh;
+  background-color: white;
+  font-family: u.$font;
+  padding: 1.8em 2.2em 1em 1.2em;
+  transition: width 0.5s ease;
+  overflow-y: scroll;
+  &__toolbar {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.8em;
+    margin-bottom: 2em;
+    align-items: center;
+    &__categories {
+      button {
+        font-family: u.$font;
+        font-size: 1.3em;
+        font-weight: 700;
+        background-color: inherit;
+        margin-right: 1em;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      &__companies {
+        color: var(--linkedin-blue);
+        border: none;
+        border-bottom: 2px solid var(--dark-brown);
+      }
+      &__profile,
+      &__performance {
+        border: none;
+        color: var(--grey-text-color);
+      }
+    }
+    &__options {
+      display: flex;
+      button {
+        padding: 0.4em 0.9em 0.4em 0.9em;
+        color: white;
+        font-size: 1.1em;
+        font-family: u.$font;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        border-radius: 0.75em;
+        display: flex;
+        align-items: center;
+      }
+      &__add {
+        background-color: var(--linkedin-blue);
+        margin-right: 1em;
+        &__icon {
+          font-size: 1.7em;
+          margin-right: 0.2em;
+          font-family: Arial, Helvetica, sans-serif;
+        }
+      }
+      &__filter {
+        margin-right: 1em;
+        background-color: var(--dark-brown);
+
+        &__icon {
+          margin-right: 0.2em;
+        }
+      }
+      &__view-selection {
+        background-color: inherit;
+        padding: 0 4px 0 4px;
+        border-radius: 0.75em;
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--grey-text-color);
+        color: rgb(60, 60, 255);
+        &__tick-icon {
+          color: green;
+        }
+        &__grid {
+          height: 100%;
+          padding: 0 4px;
+          border-right: 2px solid black;
+          display: flex;
+          align-items: center;
+        }
+        &__list {
+          width: 100%;
+          padding: 0 4px;
+          display: flex;
+          align-items: center;
+        }
+        &__grid-icon,
+        &__list-icon {
+          cursor: pointer;
+          margin: 4px;
+        }
+      }
+    }
+  }
+  &__table {
+    width: 100%;
+    box-shadow: 2px 2px 10px var(--shadow-color);
+    border-radius: 0.8em;
+    padding: 0;
+    border-spacing: 0;
+
+    th,
+    td {
+      box-sizing: border-box;
+      padding: 0.75em;
+      border-right: 1px solid rgba(108, 108, 108, 0.536);
+      &:last-child {
+        border: none;
+      }
+    }
+    th {
+      padding: 1em;
+    }
+    &__heading {
+      background-color: var(--linkedin-blue);
+
+      color: white;
+      font-size: 1em;
+      font-weight: 400;
+    }
+    &__records {
+      background-color: white;
+      color: black;
+      font-size: 0.85em;
+      text-align: center;
+      font-weight: 700;
+      &__name {
+        cursor: pointer;
+      }
+      &:nth-child(even) {
+        background-color: var(--light-blue);
+      }
+
+      &:nth-child(odd) {
+        background-color: white;
+      }
+
+      &__last-record {
+        &__name {
+          border-bottom-left-radius: 0.8em;
+        }
+
+        &__rcm-email {
+          border-bottom-right-radius: 0.8em;
+        }
+      }
+    }
+
+    &__name {
+      width: 8%;
+      border-top-left-radius: 0.8em;
+    }
+    &__wo-no {
+      width: 8%;
+    }
+    &__wo-value {
+      width: 8%;
+    }
+    &__start-date {
+      width: 8%;
+    }
+    &__end-date {
+      width: 8%;
+    }
+    &__ext-date {
+      width: 8%;
+    }
+    &__rcm {
+      width: 8%;
+    }
+    &__rcm-email {
+      width: 8%;
+      border-top-right-radius: 0.8em;
+    }
+    &__email {
+      width: 14.66%;
+    }
+    &__address {
+      width: 16.66%;
+    }
+    &__phone {
+      width: 13.66%;
+    }
+    &__hr {
+      width: 14.66%;
+    }
+    &__location {
+      width: 28.66%;
+    }
+  }
+  &__cards {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  &__pagination {
+    display: flex;
+    justify-content: flex-end;
+
+    margin-top: 4px;
+    &__arrows,
+    &__numbers {
+      background-color: inherit;
+      font-size: 1.4em;
+      border: none;
+      font-family: u.$font;
+      color: black;
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+      margin-right: 4px;
+      &__disabled {
+        color: grey;
+      }
+    }
+
+    &__active {
+      color: var(--linkedin-blue);
+    }
+  }
+}
+
+.companies-expanded {
+  width: 96%;
+}
+
+@media screen and (max-width: 930px) {
+  .companies {
+    width: 0%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .companies-expanded {
+    width: 100%;
+    padding: 1.8em 2.2em 1em 1.2em;
+    margin-left: -10px;
+    .companies {
+      &__toolbar {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        &__categories {
+          &__companies {
+            margin-bottom: 1.2em;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+@use "../layout" as l;
+
+.Login {
+  @include l.plain-canvas();
+
+  &__overlay {
+    @include l.overlay(55vw, 70vh, 612px, 380px);
+  }
+
+  &__form-side {
+    @include l.form-side();
+    h1 {
+      margin-top: 1.5em;
+      margin-bottom: 1em;
+      text-align: center;
+      font-size: 28px;
+    }
+    &__header {
+      display: flex;
+      justify-content: space-between;
+      &__logo {
+        height: 3em;
+        width: auto;
+      }
+    }
+    .cancel-btn {
+      color: var(--linkedin-blue);
+    }
+  }
+
+  &__last-fieldset {
+    margin-bottom: 44px;
+    position: relative;
+    .password-toggle-btn {
+      background-color: inherit;
+      border: none;
+      padding: 0;
+      position: absolute;
+      right: 12px;
+      color: grey;
+      cursor: pointer;
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+  #last-fieldset {
+    margin-bottom: 2em;
+  }
+
+  &__bottom-section {
+    display: flex;
+    flex-direction: column;
+  }
+  .footer-btn {
+    @include l.footer-btn(var(--dark-brown));
+    align-self: center;
+  }
+
+  @media (max-width: 700px) {
+    &__overlay {
+      padding: 24px 32px;
+    }
+    &__form-side {
+      justify-content: space-between;
+      h1 {
+        margin-top: 0;
+      }
+    }
+    .cancel-btn {
+      top: 0px;
+      right: 10px;
+    }
+  }
+}

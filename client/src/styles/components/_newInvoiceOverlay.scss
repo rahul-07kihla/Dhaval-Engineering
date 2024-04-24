@@ -1,0 +1,97 @@
+@use "../layout" as l;
+
+.Invoices {
+  &__overlay {
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.44);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    p {
+      margin-bottom: 1em;
+      text-align: center;
+      font-size: 0.8em;
+      color: rgb(61, 61, 61);
+      font-weight: 400;
+    }
+    .navigation-buttons {
+      display: flex;
+      justify-content: space-between;
+      .submit-btn {
+        width: 30%;
+      }
+    }
+    &__card {
+      width: 40%;
+      border-radius: 14px;
+      box-shadow: 1px 1px 5px rgb(99, 99, 99);
+      display: flex;
+      background-color: var(--linkedin-light-blue);
+      position: relative;
+      &__close-icon {
+        position: absolute;
+        top: 12px;
+        right: 16px;
+        cursor: pointer;
+      }
+      @media screen and (max-width: 900px) {
+        width: 100%;
+        height: 100%;
+        box-shadow: none;
+        overflow: hidden;
+        border-radius: 0;
+        min-height: 0;
+        min-width: 0;
+      }
+    }
+  }
+
+  &__add-company {
+    @include l.form-side();
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    &__close-icon {
+      align-self: flex-end;
+      cursor: pointer;
+    }
+    h1 {
+      margin: 0.2em 0;
+      text-align: center;
+      font-size: 1.5em;
+    }
+  }
+
+  &__form-section {
+    display: flex;
+    flex-direction: column;
+    .field-input {
+      width: 60%;
+    }
+    &__last-fieldset {
+      margin-bottom: 1.8em;
+    }
+    &__upload-file {
+      span {
+        font-size: 16px;
+        font-weight: 500;
+      }
+      &__form {
+        max-width: 60%;
+      }
+    }
+  }
+
+  @media (max-width: 700px) {
+    &__form-side {
+      justify-content: space-between;
+      h1 {
+        margin-top: 0;
+      }
+    }
+  }
+}

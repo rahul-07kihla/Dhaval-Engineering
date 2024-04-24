@@ -1,0 +1,79 @@
+@use "../util" as u;
+@use "../layout" as l;
+html {
+  box-sizing: border-box;
+  font-size: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body,
+html {
+  margin: 0;
+}
+
+.fieldset {
+  @include l.fieldset();
+}
+
+.submit-btn {
+  @include l.button-component();
+}
+
+.field-input::placeholder {
+  font-size: 12px;
+  text-indent: 4px;
+  font-weight: bold;
+}
+
+.field-input:focus {
+  outline: none;
+}
+
+.field-input {
+  @include l.input-box();
+}
+
+.form-content {
+  display: flex;
+  flex-direction: column;
+  padding: 0 32px;
+}
+
+.cancel-btn {
+  @include l.cancel-btn();
+}
+
+.hero-image {
+  width: 50%;
+  height: 100%;
+}
+.hero-image img {
+  height: 100%;
+  width: 100%;
+  border-radius: 14px 0 0 14px;
+  object-fit: cover;
+}
+
+.form-footer {
+  font-size: small;
+  text-align: center;
+  color: rgb(74, 74, 74);
+}
+@media (max-width: 700px) {
+  .hero-image {
+    display: none;
+  }
+  .hero-image img {
+    border-radius: 0;
+  }
+}
+@media (max-width: 900px) {
+  .hero-image img {
+    border-radius: 0;
+  }
+}

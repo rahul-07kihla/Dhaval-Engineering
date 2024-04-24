@@ -1,0 +1,256 @@
+@use "../util" as u;
+.employees {
+  width: 80vw;
+  height: 100vh;
+  background-color: white;
+  font-family: u.$font;
+  padding: 1.8em 2.2em 1em 1.2em;
+  transition: width 0.5s ease;
+  &__toolbar {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.8em;
+    margin-bottom: 2em;
+    align-items: center;
+    &__categories {
+      button {
+        font-family: u.$font;
+        font-size: 1.3em;
+        font-weight: 700;
+        background-color: inherit;
+        margin-right: 1em;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      &__companies {
+        color: var(--linkedin-blue);
+        border: none;
+        border-bottom: 2px solid var(--dark-brown);
+      }
+      &__profile,
+      &__performance {
+        border: none;
+        color: var(--grey-text-color);
+      }
+    }
+    &__options {
+      display: flex;
+      button {
+        padding: 0.4em 0.9em 0.4em 0.9em;
+        color: white;
+        font-size: 1.1em;
+        font-family: u.$font;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        border-radius: 0.75em;
+        display: flex;
+        align-items: center;
+      }
+      &__add {
+        background-color: var(--linkedin-blue);
+        &__icon {
+          font-size: 1.7em;
+          margin-right: 0.2em;
+          font-family: Arial, Helvetica, sans-serif;
+        }
+      }
+      &__filter {
+        margin-right: 1em;
+        background-color: var(--dark-brown);
+
+        &__icon {
+          margin-right: 0.2em;
+        }
+      }
+      &__view-selection {
+        background-color: inherit;
+        padding: 0 4px 0 4px;
+        border-radius: 0.75em;
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--grey-text-color);
+        color: rgb(60, 60, 255);
+        &__tick-icon {
+          color: green;
+        }
+        &__grid {
+          height: 100%;
+          padding: 0 4px;
+          border-right: 2px solid black;
+          display: flex;
+          align-items: center;
+        }
+        &__list {
+          width: 100%;
+          padding: 0 4px;
+          display: flex;
+          align-items: center;
+        }
+        &__grid-icon,
+        &__list-icon {
+          cursor: pointer;
+          margin: 4px;
+        }
+      }
+    }
+  }
+  &__table {
+    width: 100%;
+    box-shadow: 2px 2px 10px var(--shadow-color);
+    border-radius: 0.8em;
+    padding: 0;
+    border-spacing: 0;
+
+    th,
+    td {
+      box-sizing: border-box;
+      padding: 0.75em;
+      border-right: 1px solid rgba(108, 108, 108, 0.536);
+      &:last-child {
+        border: none;
+      }
+    }
+    th {
+      padding: 1em;
+    }
+    &__heading {
+      background-color: var(--linkedin-blue);
+
+      color: white;
+      font-size: 1em;
+      font-weight: 400;
+    }
+    &__records {
+      background-color: white;
+      color: black;
+      font-size: 0.85em;
+      text-align: center;
+      font-weight: 700;
+      &__name {
+        cursor: pointer;
+      }
+      &__companies {
+        position: relative;
+
+        &__info-overlay {
+          width: 280px;
+          height: auto;
+          background-color: var(--linkedin-light-blue);
+          color: var(--dark-brown);
+          box-shadow: 1px 1px 5px var(--light-blue);
+          padding: 1.5em 1em;
+          position: absolute;
+          right: 50%;
+          top: 10%;
+          z-index: 10;
+          border-radius: 1em;
+          text-wrap: wrap;
+
+          .field-input {
+            width: 100%;
+            font-size: 16px;
+          }
+        }
+
+        &__edit-icon {
+          margin-left: 12px;
+          cursor: pointer;
+        }
+      }
+      &:nth-child(even) {
+        background-color: var(--light-blue);
+      }
+
+      &:nth-child(odd) {
+        background-color: white;
+      }
+      &__edit-delete {
+        &__del-icon {
+          cursor: pointer;
+        }
+      }
+      &__last-record {
+        border-bottom-right-radius: 12px;
+        border-bottom-left-radius: 12px;
+        &__fname {
+          border-bottom-left-radius: 0.8em;
+        }
+
+        &__edit-delete {
+          border-bottom-right-radius: 0.8em;
+        }
+      }
+    }
+
+    &__fname {
+      width: 15%;
+      border-top-left-radius: 0.8em;
+    }
+    &__lname {
+      width: 15%;
+    }
+    &__email {
+      width: 20%;
+    }
+    &__designation {
+      width: 15%;
+    }
+
+    &__companies {
+      width: 25%;
+    }
+    &__edit-delete {
+      width: 10%;
+      border-top-right-radius: 0.8em;
+    }
+  }
+  &__cards {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  &__pagination {
+    display: flex;
+    justify-content: flex-end;
+
+    margin-top: 4px;
+    &__arrows,
+    &__numbers {
+      background-color: inherit;
+      font-size: 1.4em;
+      border: none;
+      font-family: u.$font;
+      color: black;
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+      margin-right: 4px;
+      &__disabled {
+        color: grey;
+      }
+    }
+
+    &__active {
+      color: var(--linkedin-blue);
+    }
+  }
+}
+
+.employees-expanded {
+  width: 96%;
+}
+
+@media screen and (max-width: 930px) {
+  .employees {
+    width: 0%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .employees-expanded {
+    width: 100%;
+    padding: 1.8em 2.2em 1em 1.2em;
+    margin-left: -10px;
+  }
+}

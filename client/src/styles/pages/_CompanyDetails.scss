@@ -1,0 +1,110 @@
+.CompanyDetails {
+  width: 80vw;
+  height: 100vh;
+  font-family: "Nunito", sans-serif;
+  background-color: white;
+  transition: width 0.5s ease;
+  &-expanded {
+    width: 96%;
+  }
+  &__header {
+    height: 30%;
+    width: 100%;
+    padding: 1.8em 2.2em 1em 1.4em;
+    background-color: var(--linkedin-blue);
+    display: flex;
+    align-items: flex-end;
+    &__container {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      color: white;
+      font-size: 28px;
+      font-weight: 500;
+      position: relative;
+      &__icon {
+        height: 2.3em;
+        width: auto;
+        margin-right: 1em;
+      }
+      &__invoice-btn {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        padding: 6px 12px;
+        cursor: pointer;
+        border: none;
+        background-color: rgb(102, 51, 50);
+        border-radius: 0.5em;
+        color: white;
+        font-family: "Nunito", sans-serif;
+        font-weight: 500;
+        font-size: 0.8em;
+      }
+    }
+  }
+  &__info {
+    height: 70%;
+    width: 100%;
+    padding: 1.8em 2.2em 1em 1.2em;
+
+    &__record {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.3em;
+      margin-bottom: 0.75em;
+      border-bottom: 2px double var(--shadow-color);
+      padding: 0.5em 1em;
+      font-weight: 700;
+      &__value {
+        display: block;
+        font-size: 0.8em;
+        text-align: center;
+        margin-top: -2px;
+        font-weight: 400;
+      }
+    }
+  }
+}
+@media screen and (max-width: 930px) {
+  .CompanyDetails {
+    width: 0%;
+    padding-left: 0;
+    padding-right: 0;
+    &__header {
+      &__container {
+        &__invoice-btn {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .CompanyDetails-expanded {
+    width: 100%;
+    margin-left: -10px;
+    .CompanyDetails {
+      &__header {
+        &__container {
+          &__invoice-btn {
+            display: block;
+            font-size: 0.6em;
+          }
+        }
+      }
+      &__info {
+        &__record {
+          flex-direction: column;
+          justify-content: flex-start;
+          &__field {
+            display: flex;
+            justify-content: space-between;
+          }
+          &__value {
+            margin-top: 0;
+          }
+        }
+      }
+    }
+  }
+}

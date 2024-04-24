@@ -1,0 +1,102 @@
+@use "../util" as u;
+@mixin plain-canvas() {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-color: rgb(119 145 167);
+}
+
+@mixin overlay($width, $height, $minWidth, $minHeight) {
+  width: $width;
+  height: $height;
+  min-width: $minWidth;
+  min-height: $minHeight;
+  border-radius: 14px;
+  box-shadow: 1px 1px 5px rgb(99, 99, 99);
+  display: flex;
+  background-color: var(--linkedin-light-blue);
+
+  @media (max-width: 900px) {
+    width: 100vw;
+    height: 100vh;
+    box-shadow: none;
+    overflow: hidden;
+    border-radius: 0;
+    min-height: 0;
+    min-width: 0;
+  }
+}
+
+@mixin form-side() {
+  width: 50%;
+  padding: 0 32px;
+  padding-top: 20px;
+  position: relative;
+  border-radius: 0 14px 14px 0;
+  display: flex;
+  flex-direction: column;
+  color: var(--dark-brown);
+  @media (max-width: 700px) {
+    width: 100%;
+    height: 100%;
+  }
+}
+@mixin fieldset() {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-left: 1.5em;
+}
+
+@mixin input-box() {
+  width: 80%;
+  padding: 12px 7px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  text-indent: 4px;
+  font-weight: bold;
+  color: gray;
+  &::placeholder {
+    font-family: u.$font;
+  }
+  @media (max-width: 700px) {
+    width: 90%;
+  }
+  @media (min-width: 700px) and (max-width: 900px) {
+    width: 85%;
+  }
+}
+
+@mixin button-component() {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 2em;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--linkedin-blue); //rgb(38, 96, 255)
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+}
+
+@mixin cancel-btn() {
+  width: fit-content;
+  margin-right: -5px;
+  cursor: pointer;
+}
+
+@mixin footer-btn($color: black) {
+  color: $color;
+  border: none;
+  font-size: small;
+  background-color: inherit;
+  font-weight: bold;
+  cursor: pointer;
+}
