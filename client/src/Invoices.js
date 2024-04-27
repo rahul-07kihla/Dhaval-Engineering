@@ -12,6 +12,7 @@ const Invoices = ({ showSidebar, entity }) => {
   const [selectedInvoice, setSelectedInvoice] = useState();
   const [showResumeWorkButton, setShowResumeWorkButton] = useState(false);
   const [showCompanyOverlay, setShowCompanyOverlay] = useState(false);
+const [addeditstate, setAddeditstate] = useState('');
 
   const hideAddCompanyForm = () => {
     setShowCompanyOverlay(false);
@@ -31,9 +32,10 @@ const Invoices = ({ showSidebar, entity }) => {
   }, [selectedInvoice]);
 
   const newInvoiceClick = () => {
+    setAddeditstate('add');
     const currentDate = new Date();
     const endDate = new Date(entity.endDate);
-
+    console.log(addeditstate);
     const extendedDate = entity.extendedDate
       ? new Date(entity.extendedDate)
       : null;
@@ -82,7 +84,6 @@ const Invoices = ({ showSidebar, entity }) => {
   useEffect(() => {
     if (fetchDataFlag) {
       fetchData();
-      console.log(fetchDataFlag);
       setFetchDataFlag(false);
     }
   }, [fetchDataFlag]);
@@ -191,6 +192,7 @@ const Invoices = ({ showSidebar, entity }) => {
             setSelectedInvoice={setSelectedInvoice}
             setFilteredInvoices={setFilteredInvoices}
             setFetchDataFlag={setFetchDataFlag}
+setAddeditstate={setAddeditstate}
           />
         ) : (
           <div className="Invoices__main__no-invoice">No invoice exists</div>
@@ -221,6 +223,7 @@ const Invoices = ({ showSidebar, entity }) => {
           hideNewInvoiceForm={hideAddInvoiceForm}
           entity={entity}
           selectedInvoice={selectedInvoice}
+          addeditstate={addeditstate}
         />
       )}
       {showFilters && (

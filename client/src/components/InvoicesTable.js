@@ -16,6 +16,7 @@ const InvoicesTable = ({
   setFilteredInvoices,
   dontShowStatus,
   setFetchDataFlag,
+  setAddeditstate
 }) => {
   const [holdTime, setHoldTime] = useState("");
   const [holdReason, setHoldReason] = useState("");
@@ -208,9 +209,10 @@ const InvoicesTable = ({
       setShowDeductionInput(true);
     }
   };
-  const handleBillNoClick = (invoice) => {
+  const handleBillNoClick = (invoice, invoicetype) => {
     setSelectedInvoice(invoice);
     setShowNewInvoiceForm(true);
+    setAddeditstate(invoicetype);
   };
   const calculateDeduction = (invoiceAmount, receivedAmount) => {
     return parseInt(invoiceAmount) - parseInt(receivedAmount);
@@ -262,7 +264,7 @@ const InvoicesTable = ({
                       : ""
                   }
                 `}
-                onClick={() => handleBillNoClick(item)}
+                onClick={() => handleBillNoClick(item,'edit')}
               >
                 {item.billNo}
               </td>

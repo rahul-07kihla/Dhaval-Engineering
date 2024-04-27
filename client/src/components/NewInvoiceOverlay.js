@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { MdClear } from "react-icons/md";
 
-const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, selectedInvoice }) => {
+const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, addeditstate, selectedInvoice }) => {
   const [currentSegment, setCurrentSegment] = useState(1);
 
   const [billNo, setBillNo] = useState("");
@@ -26,6 +26,8 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, selectedInvoice }) => {
   const [files, setFiles] = useState([]);
   const [holdTime, setHoldTime] = useState("");
   const [holdReason, setHoldReason] = useState("");
+  const [values, setValues] = useState({ ses: [{ no: '', amount: '' }] });
+  const [elements, setElements] = useState(['Element 1']);
 
   const formatDate = (dateString) => {
     if (!dateString) return "-";
@@ -35,6 +37,64 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, selectedInvoice }) => {
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
   };
+
+  const handleBillAmountChange = (e) => {
+    const amount = parseFloat(e.target.value);
+    setBillAmount(amount);
+    calculateTotal(amount, gstAmount);
+  };
+
+  const handleGstAmountChange = (e) => {
+    const amount = parseFloat(e.target.value);
+    setGstAmount(amount);
+    calculateTotal(billAmount, amount);
+  };
+
+  const calculateTotal = (bill, gst) => {
+    if (!isNaN(bill) && !isNaN(gst)) {
+      const total = bill + gst;
+      setBillTotal(total);
+    } else {
+      setBillTotal('');
+    }
+  };
+
+  const handleOnChange = (e) => {
+    let name = e.target.name;
+    let value = e.target.value;
+    const newValues = {
+      ...values,
+      [name]: value
+    }
+    setValues(value);
+    calcSum(newValues);
+    TotalBillChange(newValues);
+    TotalGstAmount(newValues);
+    setValues(newValues);
+  }
+
+  const totalSESAmount = values.ses.reduce((total, ses) => {
+    return total + parseFloat(ses.amount || 0);
+  }, 0);
+
+  const calcSum = (newValues) => {
+    const { billAmount, gstAmount } = newValues;
+    const newSum = parseInt(billAmount) + parseInt(gstAmount)
+    setBillTotal(newSum)
+  }
+
+  const TotalBillChange = (newValues) => {
+    const { billTotal, gstAmount } = newValues;
+    const newBillAmount = parseInt(billTotal, 10) - parseInt(gstAmount, 10)
+    setBillAmount(newBillAmount)
+
+  };
+
+  const TotalGstAmount = (newValues) => {
+    const { billTotal, billAmount } = newValues;
+    const newGstAmount = parseInt(billTotal, 10) - parseInt(billAmount, 10)
+    setGstAmount(newGstAmount)
+  }
 
   useEffect(() => {
     if (selectedInvoice) {
@@ -71,6 +131,12 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, selectedInvoice }) => {
     setFiles(selectedFiles);
   };
 
+  const AddItem = () => {
+    const newElement = `Element ${elements.length + 1}`;
+    setElements([...elements, newElement]);
+    setValues((prevState) => ({ ...prevState, ses: [...values.ses, { no: '', amount: '' }] }));
+  }
+
   const handleNextSegment = () => {
     if (currentSegment === 1) {
       const specialCharacters = /[!@_#$%^&*(),.?":{}|<>]/;
@@ -90,12 +156,25 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, selectedInvoice }) => {
       alert("Please fill all details");
       return;
     }
-    if (currentSegment === 2 && sesAmount === "") {
-      alert("Please fill SES amount");
-      return;
-    }
+    // if (currentSegment === 2 && sesAmount === "") {
+    //   alert("Please fill SES amount");
+    //   return;
+    // }
 
     setCurrentSegment(currentSegment + 1);
+  };
+
+  const sesArr = (e, index) => {
+    const { name, value } = e.target;
+    const sesCopy = [...values.ses];
+    sesCopy[index] = { ...sesCopy[index], [name]: value };
+    setValues(prevState => ({
+      ...prevState,
+      ses: sesCopy
+    }));
+    const updatedSES = [...values.ses];
+    updatedSES[index][name] = value;
+    setValues(prevState => ({ ...prevState, ses: updatedSES }));
   };
 
   const handlePreviousSegment = () => {
@@ -252,6 +331,7 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, selectedInvoice }) => {
                     placeholder="Bill No"
                     className="field-input"
                     value={billNo}
+                    name="billNo"
                     onChange={(e) => setBillNo(e.target.value)}
                     disabled={
                       selectedInvoice?.invoiceStatus === "SENT" ||
@@ -266,6 +346,7 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, selectedInvoice }) => {
                     placeholder="Bill details (claim for job)"
                     className="field-input"
                     value={billDetails}
+                    name="billDetails"
                     onChange={(e) => setBillDetails(e.target.value)}
                     disabled={
                       selectedInvoice?.invoiceStatus === "SENT" ||
@@ -280,7 +361,8 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, selectedInvoice }) => {
                     placeholder="Bill Amount Rs (W/O GST)"
                     className="field-input"
                     value={billAmount}
-                    onChange={(e) => setBillAmount(e.target.value)}
+                    name="billAmount"
+                    onChange={handleBillAmountChange}
                     disabled={
                       selectedInvoice?.invoiceStatus === "SENT" ||
                       selectedInvoice?.invoiceStatus === "PAID"
@@ -294,7 +376,8 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, selectedInvoice }) => {
                     placeholder="GST Rs"
                     className="field-input"
                     value={gstAmount}
-                    onChange={(e) => setGstAmount(e.target.value)}
+                    name="gstAmount"
+                    onChange={handleGstAmountChange}
                     disabled={
                       selectedInvoice?.invoiceStatus === "SENT" ||
                       selectedInvoice?.invoiceStatus === "PAID"
@@ -308,11 +391,9 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, selectedInvoice }) => {
                     placeholder="Bill Total Rs"
                     className="field-input"
                     value={billTotal}
+                    name="billTotal"
                     onChange={(e) => setBillTotal(e.target.value)}
-                    disabled={
-                      selectedInvoice?.invoiceStatus === "SENT" ||
-                      selectedInvoice?.invoiceStatus === "PAID"
-                    }
+                    disabled={true}
                   />
                 </div>
               </>
@@ -329,6 +410,7 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, selectedInvoice }) => {
                         placeholder="Submitted to client on date"
                         className="field-input"
                         value={submittedToDate}
+                        name="submittedToDate"
                         onFocus={(e) => (e.target.type = "date")}
                         onChange={(e) => setSubmittedToDate(e.target.value)}
                         disabled={
@@ -344,6 +426,7 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, selectedInvoice }) => {
                         placeholder="Approved by client Rs"
                         className="field-input"
                         value={approvedByClient}
+                        name="approvedByClient"
                         onChange={(e) => setApprovedByClient(e.target.value)}
                         disabled={
                           selectedInvoice?.invoiceStatus === "SENT" ||
@@ -358,6 +441,7 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, selectedInvoice }) => {
                         placeholder="Approved on date"
                         className="field-input"
                         value={approvedOnDate}
+                        name="approvedOnDate"
                         onFocus={(e) => (e.target.type = "date")}
                         onChange={(e) => setApprovedOnDate(e.target.value)}
                         disabled={
@@ -369,7 +453,7 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, selectedInvoice }) => {
                   </>
                 )}
 
-                <div className="fieldset ">
+                {/*<div className="fieldset ">
                   <span>SES No.</span>
                   <input
                     type="text"
@@ -399,6 +483,48 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, selectedInvoice }) => {
                       selectedInvoice?.invoiceStatus === "PAID"
                     }
                   />
+                  </div>*/}
+                {elements.map((element, index) => (
+                  <div className="addElements" key={index}>
+                    <div className="fieldset">
+                      <span>SES No.</span>
+                      <input
+                        type="text"
+                        placeholder="SES No."
+                        className="field-input"
+                        onChange={(e) => {
+                          sesArr(e, index);
+                          handleOnChange(e);
+                        }}
+                        name="no"
+                        value={values.ses[index].no}
+                        disabled={
+                          selectedInvoice?.invoiceStatus === "SENT" ||
+                          selectedInvoice?.invoiceStatus === "PAID"
+                        }
+                      />
+                    </div>
+                    <div className="fieldset Invoices__form-section__last-fieldset">
+                      <span>SES Amount Rs</span>
+                      <input
+                        type="number"
+                        placeholder="SES Amount Rs"
+                        className="field-input"
+                        name="amount"
+                        onChange={(e) => {
+                          sesArr(e, index);
+                          handleOnChange(e);
+                        }}
+                        value={values.ses[index].amount}
+                        disabled={
+                          selectedInvoice?.invoiceStatus === "SENT" ||
+                          selectedInvoice?.invoiceStatus === "PAID"
+                        }
+                      />
+                    </div>
+                  </div>))}
+                <div className="fieldset">
+                  <button onClick={AddItem}>Add</button>
                 </div>
               </>
             )}
@@ -411,7 +537,8 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, selectedInvoice }) => {
                     type="number"
                     placeholder="Invoice amount Rs"
                     className="field-input"
-                    value={sesAmount}
+                    value={totalSESAmount}
+                    name="invoiceAmount"
                     disabled
                   />
                 </div>
@@ -422,6 +549,7 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, selectedInvoice }) => {
                     placeholder="Invoice raised on date"
                     className="field-input"
                     value={invoiceRaisedDate}
+                    name="invoiceRaisedDate"
                     onFocus={(e) => (e.target.type = "date")}
                     onChange={(e) => setInvoiceRaisedDate(e.target.value)}
                     disabled={
@@ -438,6 +566,7 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, selectedInvoice }) => {
                     className="field-input"
                     onFocus={(e) => (e.target.type = "date")}
                     value={expectedPaymentDate}
+                    name="expectedPaymentDate"
                     onChange={(e) => setExpectedPaymentDate(e.target.value)}
                     disabled={
                       selectedInvoice?.invoiceStatus === "SENT" ||
