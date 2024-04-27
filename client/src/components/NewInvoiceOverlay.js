@@ -254,7 +254,7 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, addeditstate, selectedI
       ? new Date(entity.extendedDate)
       : null;
     const laterDate = endDate > extendedDate ? endDate : extendedDate;
-    console.log(laterDate);
+    // console.log(laterDate);
     if (currentDate > laterDate) {
       alert("Cannot edit invoice after end date");
       return;

@@ -11,57 +11,175 @@ const AddCompanyOverlay = ({
   companyId,
   prefilledName,
   prefilledLocation,
+  Data
 }) => {
-  const [companyName, setCompanyName] = useState("");
-  const [woNo, setWoNo] = useState("");
-  const [woValue, setWoValue] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [extendedDate, setExtendedDate] = useState("");
+  const [companyData, setCompanyData] = useState({
+    companyName: "",
+    woNo: "",
+    woValue: "",
+    startDate: "",
+    endDate: "",
+    extendedDate: "",
+    location: "",
+    RCM: "",
+    RCMemail: "",
+    icon: ""
+  });
+
+  const [errors, setErrors] = useState({
+    companyName: "",
+    woNo: "",
+    woValue: "",
+    startDate: "",
+    endDate: "",
+    extendedDate: "",
+    location: "",
+    RCM: "",
+    RCMemail: "",
+    icon: ""
+  });
+  // const [companyName, setCompanyName] = useState();
+  // const [woNo, setWoNo] = useState("");
+  // const [woValue, setWoValue] = useState("");
+  // const [startDate, setStartDate] = useState("");
+  // const [endDate, setEndDate] = useState("");
+  // const [extendedDate, setExtendedDate] = useState("");
   const [location, setLocation] = useState("");
-  const [RCM, setRCM] = useState("");
-  const [RCMemail, setRCMEmail] = useState("");
-  const [icon, setIcon] = useState("");
+  // const [RCM, setRCM] = useState("");
+  // const [RCMemail, setRCMEmail] = useState("");
+  // const [icon, setIcon] = useState("");
+
   useEffect(() => {
-    setCompanyName(prefilledName);
+    if (Data) {
+      setCompanyData(Data);
+    }
+    // setCompanyName(prefilledName);
     setLocation(prefilledLocation);
-  }, [companyId, prefilledLocation, prefilledName]);
+  }, [companyId, prefilledLocation, Data]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCompanyData({
+      ...companyData,
+      [name]: value
+    });
+    if(name === 'name') {
+      if(value.trim() === '') {
+        setErrors({
+          ...errors,
+          name: "Name is required"
+        })
+      }
+    }
+    if(name === 'woNo') {
+      if(value.trim() === '') {
+        setErrors({
+          ...errors,
+          woNo: "WO No is required"
+        })
+      }
+    }
+    if(name === 'woValue') {
+      if(value.trim() === '') {
+        setErrors({
+          ...errors,
+          woValue: "Wo Value is required"
+        })
+      }
+    }
+    if(name === 'startDate') {
+      if(value.trim() === '') {
+        setErrors({
+          ...errors,
+          startDate: "Start Date is required"
+        })
+      }
+    }
+    if(name === 'endDate') {
+      if(value.trim() === '') {
+        setErrors({
+          ...errors,
+          endDate: "End Date is required"
+        })
+      }
+    }
+    if(name === 'extendedDate') {
+      if(value.trim() === '') {
+        setErrors({
+          ...errors,
+          extendedDate: "Extended Date is required"
+        })
+      }
+    }
+    if(name === 'location') {
+      if(value.trim() === '') {
+        setErrors({
+          ...errors,
+          location: "Location is required"
+        })
+      }
+    }
+    if(name === 'RCM') {
+      if(value.trim() === '') {
+        setErrors({
+          ...errors,
+          RCM: "RCM is required"
+        })
+      }
+    }
+    if(name === 'RCMemail') {
+      if(value.trim() === '') {
+        setErrors({
+          ...errors,
+          RCMemail: "RCMemail is required"
+        })
+      }
+    }
+  };
+
   const handleContainerClick = (e) => {
     e.stopPropagation();
   };
 
   const handleAddCompany = async () => {
-    const companyData = {
-      name: companyName,
-      woNo,
-      woValue,
-      startDate,
-      endDate,
-      extendedDate,
-      location,
-      RCM,
-      RCMemail,
-      icon,
-    };
+    // const companyData = {
+    //   name: companyName,
+    //   woNo,
+    //   woValue,
+    //   startDate,
+    //   endDate,
+    //   extendedDate,
+    //   location,
+    //   RCM,
+    //   RCMemail,
+    //   icon,
+    // };
 
     try {
+      const url = prefilledName ? "http://localhost:4000/update-companies" : "http://localhost:4000/companies";
+      
+      const modifiedCompanyData = {
+        ...companyData,
+        name: 'companyName' // Change the name field as needed
+      };
       const response = await axios.post(
-        "http://localhost:4000/companies",
-        companyData
+        url,
+        modifiedCompanyData
       );
-
-      if (response.status === 201) {
-        console.log("Company added successfully");
-        setCompanyName("");
-        setWoNo("");
-        setWoValue("");
-        setStartDate("");
-        setEndDate("");
-        setExtendedDate("");
-        setLocation("");
-        setRCM("");
-        setRCMEmail("");
-        setIcon("");
+      if (response.status === 200) {
+        // console.log("Company added successfully");
+        // setCompanyName("");
+        // setWoNo("");
+        // setWoValue("");
+        // setStartDate("");
+        // setEndDate("");
+        // setExtendedDate("");
+        // setLocation("");
+        // setRCM("");
+        // setRCMEmail("");
+        // setIcon("");
+        hideAddCompanyForm();
+      } else if(response.status === 201) {
         hideAddCompanyForm();
       } else {
         console.error("Error adding company:", response.statusText);
@@ -81,9 +199,10 @@ const AddCompanyOverlay = ({
             size={20}
           />
           <section>
-            <h1>Add Company</h1>
+            <h1>{prefilledName ? 'Update' : 'Add'} Company</h1>
             <p>Enter company details</p>
           </section>
+
           <section className="companies__form-section">
             <div className="fieldset">
               <FaAddressCard size={18} />
@@ -91,43 +210,50 @@ const AddCompanyOverlay = ({
                 type="text"
                 placeholder="Company name"
                 className="field-input"
-                value={companyName}
+                value={companyData.name}
+                name="companyName"
                 disabled={!!prefilledName}
-                onChange={(e) => setCompanyName(e.target.value)}
+                onChange={handleChange}
               />
             </div>
+            {errors.name && <div className="error">{errors.name}</div>}
             <div className="fieldset">
               <AiOutlineNumber size={18} />
               <input
                 type="text"
                 placeholder="WO No."
                 className="field-input"
-                value={woNo}
-                onChange={(e) => setWoNo(e.target.value)}
+                name="woNo"
+                value={companyData.woNo ?? ''}
+                onChange={handleChange}
               />
             </div>
+            {errors.woNo && <div className="error">{errors.woNo}</div>}
             <div className="fieldset">
               <LuIndianRupee size={18} />
               <input
                 type="text"
                 placeholder="WO Value"
                 className="field-input"
-                value={woValue}
-                onChange={(e) => setWoValue(e.target.value)}
+                value={companyData.woValue ?? ''}
+                name="woValue"
+                onChange={handleChange}
               />
             </div>
+            {errors.woValue && <div className="error">{errors.woValue}</div>}
             <div className="fieldset">
               <MdDateRange size={18} />
               <input
                 type="text"
                 placeholder="Start Date"
-                on
                 onFocus={(e) => (e.target.type = "date")}
                 className="field-input"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
+                name="startDate"
+                value={companyData.startDate ?? ''}
+                onChange={handleChange}
               />
             </div>
+            {errors.startDate && <div className="error">{errors.startDate}</div>}
             <div className="fieldset">
               <MdDateRange size={18} />
               <input
@@ -135,10 +261,12 @@ const AddCompanyOverlay = ({
                 placeholder="End Date"
                 onFocus={(e) => (e.target.type = "date")}
                 className="field-input"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
+                name="endDate"
+                value={companyData.endDate ?? ''}
+                onChange={handleChange}
               />
             </div>
+            {errors.endDate && <div className="error">{errors.endDate}</div>}
             <div className="fieldset">
               <MdDateRange size={18} />
               <input
@@ -146,50 +274,58 @@ const AddCompanyOverlay = ({
                 placeholder="Extended Date"
                 onFocus={(e) => (e.target.type = "date")}
                 className="field-input"
-                value={extendedDate}
-                onChange={(e) => setExtendedDate(e.target.value)}
+                name="extendedDate"
+                value={companyData.extendedDate ?? ''}
+                onChange={handleChange}
               />
             </div>
+            {errors.extendedDate && <div className="error">{errors.extendedDate}</div>}
             <div className="fieldset">
               <FaLocationDot size={18} />
               <input
                 type="text"
                 placeholder="Location"
                 className="field-input"
-                value={location}
+                name="location"
+                value={companyData.location ?? ''}
                 disabled={!!prefilledLocation}
-                onChange={(e) => setLocation(e.target.value)}
+                onChange={handleChange}
               />
             </div>
+            {errors.location && <div className="error">{errors.location}</div>}
             <div className="fieldset">
               <FaHatCowboy size={18} />
               <input
                 type="text"
                 placeholder="RCM"
                 className="field-input"
-                value={RCM}
-                onChange={(e) => setRCM(e.target.value)}
+                name="RCM"
+                value={companyData.RCM ?? ''}
+                onChange={handleChange}
               />
             </div>
-
+            {errors.RCM && <div className="error">{errors.RCM}</div>}
             <div className="fieldset ">
               <MdEmail size={18} />
               <input
                 type="email"
                 placeholder="RCM email"
                 className="field-input"
-                value={RCMemail}
-                onChange={(e) => setRCMEmail(e.target.value)}
+                name="RCMemail"
+                value={companyData.RCMemail ?? ''}
+                onChange={handleChange}
               />
             </div>
+            {errors.RCMemail && <div className="error">{errors.RCMemail}</div>}
             <div className="fieldset companies__form-section__last-fieldset">
               <FaImage size={18} />
               <input
                 type="text"
                 placeholder="icon"
                 className="field-input"
-                value={icon}
-                onChange={(e) => setIcon(e.target.value)}
+                name="icon"
+                value={companyData.icon ?? ''}
+                onChange={handleChange}
               />
             </div>
 

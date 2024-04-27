@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { BsFillPencilFill } from "react-icons/bs";
+import axios from "axios";
+import AddCompanyOverlay from "./components/AddCompanyOverlay";
 
 const formatDate = (dateString) => {
   if (!dateString) return "-";
@@ -10,8 +13,42 @@ const formatDate = (dateString) => {
 };
 
 const CompanyDetails = ({ showSidebar, entity, setComponent }) => {
+  const [showAddCompanyForm, setShowAddCompanyForm] = useState(false);
+  const [companydata, setCompanyData] = useState({
+    name: entity.name,
+    woNo: entity.woNo,
+    woValue: entity.woValue,
+    startDate: entity.startDate,
+    endDate: entity.endDate,
+    extendedDate: entity.extendedDate,
+    location: entity.location,
+    RCM: entity.RCM,
+    RCMemail: entity.RCMemail,
+    icon: entity.icon
+  });
   const goToInvoices = () => {
     setComponent("invoices");
+  };
+
+  const addCompanyClick = () => {
+    setShowAddCompanyForm(true);
+  };
+  const hideAddCompanyForm = () => {
+    setShowAddCompanyForm(false);
+    fetchData()
+  };
+
+  useEffect(() => {
+    fetchData()
+  },[]);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.post("http://localhost:4000/companies/"+entity._id);
+      setCompanyData(response.data.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
   return (
@@ -22,14 +59,15 @@ const CompanyDetails = ({ showSidebar, entity, setComponent }) => {
     >
       <section className="CompanyDetails__header">
         <div className="CompanyDetails__header__container">
-          {entity && entity.icon && (
+          {companydata && companydata.icon && (
             <img
               className="CompanyDetails__header__container__icon"
-              src={entity.icon}
-              alt={entity.name}
+              src={companydata.icon}
+              alt={companydata.name}
             />
           )}
-          {entity && <span>{entity.name}</span>}
+          {companydata && <span>{companydata.name}</span>}
+          <BsFillPencilFill style={{ float: 'right' }} onClick={addCompanyClick}/>
           <button
             className="CompanyDetails__header__container__invoice-btn"
             onClick={goToInvoices}
@@ -42,13 +80,13 @@ const CompanyDetails = ({ showSidebar, entity, setComponent }) => {
         <div className="CompanyDetails__info__record">
           <div className="CompanyDetails__info__record__field">
             Work Order No
-            <p className="CompanyDetails__info__record__value">{entity.woNo}</p>
+            <p className="CompanyDetails__info__record__value">{companydata.woNo}</p>
           </div>
 
           <div className="CompanyDetails__info__record__field">
             Work Order Value
             <p className="CompanyDetails__info__record__value">
-              {entity.woValue}
+              {companydata.woValue}
             </p>
           </div>
         </div>
@@ -57,21 +95,21 @@ const CompanyDetails = ({ showSidebar, entity, setComponent }) => {
           <div className="CompanyDetails__info__record__field">
             Start Date
             <p className="CompanyDetails__info__record__value">
-              {formatDate(entity.startDate)}
+              {formatDate(companydata.startDate)}
             </p>
           </div>
           <div className="CompanyDetails__info__record__field">
             End Date
             <p className="CompanyDetails__info__record__value">
-              {formatDate(entity.endDate)}
+              {formatDate(companydata.endDate)}
             </p>
           </div>
           <div className="CompanyDetails__info__record__field">
             Extended Date
             <p className="CompanyDetails__info__record__value">
-              {entity.extendedDate === null
+              {companydata.extendedDate === null
                 ? "-"
-                : formatDate(entity.extendedDate)}
+                : formatDate(companydata.extendedDate)}
             </p>
           </div>
         </div>
@@ -79,23 +117,26 @@ const CompanyDetails = ({ showSidebar, entity, setComponent }) => {
           <div className="CompanyDetails__info__record__field">
             Location
             <p className="CompanyDetails__info__record__value">
-              {entity.location}
+              {companydata.location}
             </p>
           </div>
         </div>
         <div className="CompanyDetails__info__record">
           <div className="CompanyDetails__info__record__field">
             RCM
-            <p className="CompanyDetails__info__record__value">{entity.RCM}</p>
+            <p className="CompanyDetails__info__record__value">{companydata.RCM}</p>
           </div>
           <div className="CompanyDetails__info__record__field">
             RCM email id
             <p className="CompanyDetails__info__record__value">
-              {entity.RCMemail}
+              {companydata.RCMemail}
             </p>
           </div>
         </div>
       </section>
+      {showAddCompanyForm && (
+        <AddCompanyOverlay Data={companydata} prefilledName={true} hideAddCompanyForm={hideAddCompanyForm} />
+      )}
     </div>
   );
 };
