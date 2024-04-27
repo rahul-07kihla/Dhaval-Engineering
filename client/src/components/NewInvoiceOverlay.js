@@ -201,6 +201,7 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, addeditstate, selectedI
         }
       }
       const invoiceData = {
+        _id: entity._id,
         billNo,
         billDetails,
         billAmount,
@@ -221,7 +222,9 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, addeditstate, selectedI
         holdTime,
         deduction,
         deductionReason,
+        values
       };
+      console.log(invoiceData._id);
       const formData = new FormData();
       formData.append("invoiceData", JSON.stringify(invoiceData));
       for (let file of files) {
@@ -280,6 +283,7 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, addeditstate, selectedI
       holdTime,
       deduction,
       deductionReason,
+      values
     };
     const formData = new FormData();
     formData.append("invoiceData", JSON.stringify(invoiceData));

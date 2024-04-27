@@ -141,7 +141,6 @@ const uploadInvoice = multer({
 }).any();
 
 app.post("/update-companies", uploadInvoice, async (req, res) => {
-  const { _id } = req.body;
   // var invoice = req.body.invoices; 
   // if(invoice.length != 0) {
   //   const invoiceData = JSON.parse(req.body.invoices);
@@ -151,19 +150,35 @@ app.post("/update-companies", uploadInvoice, async (req, res) => {
   // console.log("id: ", id);
   // console.log("Invoice Data: ", invoiceData);
   try {
-    const company = await CompanySchema.findById(_id);
-    if (!company) {
-      return res.status(404).json({ message: "Company not found" });
-    }
     // if(invoice.length != 0) {
     // const newInvoice = {
     //   ...invoiceData,
     //   files: files || [],
     // };
     // }
-    // company.invoices.push(newInvoice);
-    const updatedCompany = await CompanySchema.findOneAndUpdate({ _id: req.body._id }, { $set: req.body });
-    res.status(200).json({ message: "Success", data: updatedCompany });
+    const _id = 0;
+    if (req.body.invoiceData.length) {
+      const _id = JSON.parse(req.body.invoiceData)._id;
+      const company = await CompanySchema.findById(_id);
+      if (!company) {
+        return res.status(404).json({ message: "Company not found" });
+      }
+      company.invoices.push(JSON.parse(req.body.invoiceData));
+      console.log(company);
+      const updatedCompany = await CompanySchema.findOneAndUpdate({ _id: _id }, company);
+      console.log(updatedCompany);
+      res.status(200).json({ message: "Success", data: updatedCompany });
+    } else {
+      const { _id } = req.body;
+      const company = await CompanySchema.findById(_id);
+      if (!company) {
+        return res.status(404).json({ message: "Company not found" });
+      }
+      // company.invoices.push(req.body);
+      const updatedCompany = await CompanySchema.findOneAndUpdate({ _id: req.body._id }, { $set: req.body });
+      console.log(updatedCompany);
+      res.status(200).json({ message: "Success", data: updatedCompany });
+    }
   } catch (error) {
     console.error("Error updating company:", error);
     res.status(500).json({ message: "Server Error" + error });
