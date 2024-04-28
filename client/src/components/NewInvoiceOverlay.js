@@ -7,8 +7,8 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, addeditstate, selectedI
 
   const [billNo, setBillNo] = useState("");
   const [billDetails, setBillDetails] = useState("");
-  const [billAmount, setBillAmount] = useState("");
-  const [gstAmount, setGstAmount] = useState("");
+  const [billAmount, setBillAmount] = useState(0);
+  const [gstAmount, setGstAmount] = useState(0);
   const [billTotal, setBillTotal] = useState("");
   const [submittedToDate, setSubmittedToDate] = useState("");
   const [approvedByClient, setApprovedByClient] = useState("");
@@ -67,36 +67,39 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, addeditstate, selectedI
       [name]: value
     }
     setValues(value);
-    calcSum(newValues);
-    TotalBillChange(newValues);
-    TotalGstAmount(newValues);
+    // calcSum(newValues);
+    // TotalBillChange(newValues);
+    // TotalGstAmount(newValues);
     setValues(newValues);
   }
+  // const totalSESAmount = 0;
+  // if(!selectedInvoice) {
+    const totalSESAmount = values.ses.reduce((total, ses) => {
+      return total + parseFloat(ses.amount || 0);
+    }, 0);
+  // }
 
-  const totalSESAmount = values.ses.reduce((total, ses) => {
-    return total + parseFloat(ses.amount || 0);
-  }, 0);
+  // const calcSum = (newValues) => {
+  //   const { billAmount, gstAmount } = newValues;
+  //   const newSum = parseInt(billAmount) + parseInt(gstAmount)
+  //   setBillTotal(newSum)
+  // }
 
-  const calcSum = (newValues) => {
-    const { billAmount, gstAmount } = newValues;
-    const newSum = parseInt(billAmount) + parseInt(gstAmount)
-    setBillTotal(newSum)
-  }
+  // const TotalBillChange = (newValues) => {
+  //   const { billTotal, gstAmount } = newValues;
+  //   const newBillAmount = parseInt(billTotal, 10) - parseInt(gstAmount, 10)
+  //   setBillAmount(newBillAmount)
 
-  const TotalBillChange = (newValues) => {
-    const { billTotal, gstAmount } = newValues;
-    const newBillAmount = parseInt(billTotal, 10) - parseInt(gstAmount, 10)
-    setBillAmount(newBillAmount)
+  // };
 
-  };
-
-  const TotalGstAmount = (newValues) => {
-    const { billTotal, billAmount } = newValues;
-    const newGstAmount = parseInt(billTotal, 10) - parseInt(billAmount, 10)
-    setGstAmount(newGstAmount)
-  }
+  // const TotalGstAmount = (newValues) => {
+  //   const { billTotal, billAmount } = newValues;
+  //   const newGstAmount = parseInt(billTotal, 10) - parseInt(billAmount, 10)
+  //   setGstAmount(newGstAmount)
+  // }
 
   useEffect(() => {
+    console.log(selectedInvoice);
     if (selectedInvoice) {
       setBillNo(selectedInvoice.billNo);
       setBillDetails(selectedInvoice.billDetails);
@@ -200,6 +203,8 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, addeditstate, selectedI
           }
         }
       }
+      const sesarr = values.ses;
+      console.log(sesarr);
       const invoiceData = {
         _id: entity._id,
         billNo,
@@ -212,7 +217,7 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, addeditstate, selectedI
         approvedOnDate,
         sesNo,
         sesAmount,
-        invoiceAmount,
+        invoiceAmount: totalSESAmount,
         invoiceRaisedDate,
         expectedPaymentDate,
         amountReceived,
@@ -222,9 +227,9 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, addeditstate, selectedI
         holdTime,
         deduction,
         deductionReason,
-        values
+        ses: sesarr
       };
-      console.log(invoiceData._id);
+      console.log(invoiceData);
       const formData = new FormData();
       formData.append("invoiceData", JSON.stringify(invoiceData));
       for (let file of files) {
@@ -262,6 +267,8 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, addeditstate, selectedI
       alert("Cannot edit invoice after end date");
       return;
     }
+    const sesarr = values.ses;
+    console.log(sesarr);
     const invoiceData = {
       billNo,
       billDetails,
@@ -273,7 +280,7 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, addeditstate, selectedI
       approvedOnDate,
       sesNo,
       sesAmount,
-      invoiceAmount,
+      invoiceAmount: totalSESAmount,
       invoiceRaisedDate,
       expectedPaymentDate,
       amountReceived,
@@ -283,8 +290,9 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, addeditstate, selectedI
       holdTime,
       deduction,
       deductionReason,
-      values
+      sesarr
     };
+    console.log(invoiceData);
     const formData = new FormData();
     formData.append("invoiceData", JSON.stringify(invoiceData));
     for (let file of files) {
@@ -488,7 +496,7 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, addeditstate, selectedI
                     }
                   />
                   </div>*/}
-                {elements.map((element, index) => (
+                {!selectedInvoice && elements.map((element, index) => (
                   <div className="addElements" key={index}>
                     <div className="fieldset">
                       <span>SES No.</span>
@@ -526,7 +534,48 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, addeditstate, selectedI
                         }
                       />
                     </div>
-                  </div>))}
+                  </div>
+                ))}
+                {selectedInvoice && selectedInvoice.ses.map((element, index) => (
+                  <div className="addElements" key={index}>
+                    <div className="fieldset">
+                      <span>SES No.</span>
+                      <input
+                        type="text"
+                        placeholder="SES No."
+                        className="field-input"
+                        onChange={(e) => {
+                          sesArr(e, index);
+                          handleOnChange(e);
+                        }}
+                        name="no"
+                        value={element.no}
+                        disabled={
+                          selectedInvoice?.invoiceStatus === "SENT" ||
+                          selectedInvoice?.invoiceStatus === "PAID"
+                        }
+                      />
+                    </div>
+                    <div className="fieldset Invoices__form-section__last-fieldset">
+                      <span>SES Amount Rs</span>
+                      <input
+                        type="number"
+                        placeholder="SES Amount Rs"
+                        className="field-input"
+                        name="amount"
+                        onChange={(e) => {
+                          sesArr(e, index);
+                          handleOnChange(e);
+                        }}
+                        value={element.amount}
+                        disabled={
+                          selectedInvoice?.invoiceStatus === "SENT" ||
+                          selectedInvoice?.invoiceStatus === "PAID"
+                        }
+                      />
+                    </div>
+                  </div>
+                ))}
                 <div className="fieldset">
                   <button onClick={AddItem}>Add</button>
                 </div>
@@ -541,7 +590,7 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, addeditstate, selectedI
                     type="number"
                     placeholder="Invoice amount Rs"
                     className="field-input"
-                    value={totalSESAmount}
+                    value={totalSESAmount !== 0 ? totalSESAmount : invoiceAmount}
                     name="invoiceAmount"
                     disabled
                   />

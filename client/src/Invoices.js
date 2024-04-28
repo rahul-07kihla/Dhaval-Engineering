@@ -35,7 +35,6 @@ const [addeditstate, setAddeditstate] = useState('');
     setAddeditstate('add');
     const currentDate = new Date();
     const endDate = new Date(entity.endDate);
-    console.log(addeditstate);
     const extendedDate = entity.extendedDate
       ? new Date(entity.extendedDate)
       : null;
@@ -44,10 +43,10 @@ const [addeditstate, setAddeditstate] = useState('');
     const oneMonthLaterDate = new Date(laterDate);
 
     oneMonthLaterDate.setMonth(oneMonthLaterDate.getMonth() + 1);
-    console.log("End Date:", endDate);
-    console.log("Extended Date:", extendedDate);
-    console.log("Later Date:", laterDate);
-    console.log("One Month Later Date:", oneMonthLaterDate);
+    // console.log("End Date:", endDate);
+    // console.log("Extended Date:", extendedDate);
+    // console.log("Later Date:", laterDate);
+    // console.log("One Month Later Date:", oneMonthLaterDate);
 
     if (currentDate > oneMonthLaterDate) {
       console.log("Showing alert: Cannot create invoice after end date");

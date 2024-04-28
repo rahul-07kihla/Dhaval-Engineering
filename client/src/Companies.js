@@ -28,7 +28,6 @@ const Companies = ({ showSidebar, setComponent, setEntity }) => {
       const response = await axios.get("http://localhost:4000/companies");
       if (response.status === 200) {
         setCompanyData(response.data);
-        console.log(response.data);
       } else {
         console.error("Error fetching company data:", response.statusText);
       }

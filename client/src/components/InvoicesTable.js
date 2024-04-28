@@ -16,7 +16,6 @@ const InvoicesTable = ({
   setFilteredInvoices,
   dontShowStatus,
   setFetchDataFlag,
-  setAddeditstate
 }) => {
   const [holdTime, setHoldTime] = useState("");
   const [holdReason, setHoldReason] = useState("");
@@ -83,11 +82,13 @@ const InvoicesTable = ({
   };
 
   const toggleOverlay = (invoiceId) => {
+    console.log(invoiceId);
     setOpenOverlays(
       openOverlays.includes(invoiceId)
         ? openOverlays.filter((id) => id !== invoiceId)
         : [...openOverlays, invoiceId]
     );
+    console.log(invoiceId);
   };
   const toggleInfoOverlay = (invoiceId) => {
     setOpenInfoOverlays(
@@ -209,10 +210,9 @@ const InvoicesTable = ({
       setShowDeductionInput(true);
     }
   };
-  const handleBillNoClick = (invoice, invoicetype) => {
+  const handleBillNoClick = (invoice) => {
     setSelectedInvoice(invoice);
     setShowNewInvoiceForm(true);
-    setAddeditstate(invoicetype);
   };
   const calculateDeduction = (invoiceAmount, receivedAmount) => {
     return parseInt(invoiceAmount) - parseInt(receivedAmount);
@@ -264,7 +264,7 @@ const InvoicesTable = ({
                       : ""
                   }
                 `}
-                onClick={() => handleBillNoClick(item,'edit')}
+                onClick={() => handleBillNoClick(item)}
               >
                 {item.billNo}
               </td>

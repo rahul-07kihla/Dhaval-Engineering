@@ -30,6 +30,7 @@ const InvoiceSchema = mongoose.Schema({
   amountDueReason: { type: String, default: "-" },
   files: [FileSchema],
   loss: { type: Number, default: 0 },
+  ses: {type: Array, default: []}
 });
 
 const CompanyDetails = mongoose.Schema({
