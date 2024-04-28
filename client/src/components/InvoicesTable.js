@@ -82,6 +82,7 @@ const InvoicesTable = ({
   };
 
   const toggleOverlay = (invoiceId) => {
+    debugger
     console.log(invoiceId);
     setOpenOverlays(
       openOverlays.includes(invoiceId)
@@ -97,7 +98,9 @@ const InvoicesTable = ({
         : [...openInfoOverlays, invoiceId]
     );
   };
-  const isOverlayOpen = (invoiceId) => openOverlays.includes(invoiceId);
+  const isOverlayOpen = (invoiceId) => {
+    return openOverlays.includes(invoiceId);
+  }
   const isInfoOverlayOpen = (invoiceId) => openInfoOverlays.includes(invoiceId);
   const submitInvoice = async (companyId, invoiceId, invoiceAmount) => {
     const calculatedDeduction = calculateDeduction(
@@ -270,7 +273,7 @@ const InvoicesTable = ({
               </td>
               <td>{item.billTotal}</td>
               <td>{formatDate(item.submittedToDate)}</td>
-              <td>{item.sesNo}</td>
+              <td>{item.ses.length != 0 ? item.ses[0].no : 0}</td>
               <td>{formatDate(item.expectedPaymentDate)}</td>
               <td>{formatDate(item.approvedOnDate)}</td>
               <td>
@@ -334,7 +337,7 @@ const InvoicesTable = ({
                     }}
                   />
                 )}
-                {isOverlayOpen(item._id) && (
+                {openOverlays.includes(item._id) && (
                   <div className="Invoices__main__table__records__status__overlay">
                     <div className="Invoices__main__table__records__status__overlay__form-section">
                       <MdClear

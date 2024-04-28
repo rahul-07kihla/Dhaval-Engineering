@@ -191,7 +191,7 @@ const [addeditstate, setAddeditstate] = useState('');
             setSelectedInvoice={setSelectedInvoice}
             setFilteredInvoices={setFilteredInvoices}
             setFetchDataFlag={setFetchDataFlag}
-setAddeditstate={setAddeditstate}
+            setAddeditstate={setAddeditstate}
           />
         ) : (
           <div className="Invoices__main__no-invoice">No invoice exists</div>

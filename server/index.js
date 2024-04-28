@@ -141,49 +141,31 @@ const uploadInvoice = multer({
 }).any();
 
 app.post("/update-companies", uploadInvoice, async (req, res) => {
-  // var invoice = req.body.invoices; 
-  // if(invoice.length != 0) {
-  //   const invoiceData = JSON.parse(req.body.invoices);
-  // }
-  // const files = req.files;
-  // console.log("Files: ", files);
-  // console.log("id: ", id);
-  // console.log("Invoice Data: ", invoiceData);
+  const { id } = req.body;
+  const invoiceData = JSON.parse(req.body.invoiceData);
+  const files = req.files;
+  console.log("Files: ", files);
+  console.log("id: ", id);
+  console.log("Invoice Data: ", invoiceData);
   try {
-    // if(invoice.length != 0) {
-    // const newInvoice = {
-    //   ...invoiceData,
-    //   files: files || [],
-    // };
-    // }
-    const _id = 0;
-    if (req.body.invoiceData.length) {
-      const _id = JSON.parse(req.body.invoiceData)._id;
-      const company = await CompanySchema.findById(_id);
-      if (!company) {
-        return res.status(404).json({ message: "Company not found" });
-      }
-      company.invoices.push(JSON.parse(req.body.invoiceData));
-      console.log(company);
-      const updatedCompany = await CompanySchema.findOneAndUpdate({ _id: _id }, company);
-      console.log(updatedCompany);
-      res.status(200).json({ message: "Success", data: updatedCompany });
-    } else {
-      const { _id } = req.body;
-      const company = await CompanySchema.findById(_id);
-      if (!company) {
-        return res.status(404).json({ message: "Company not found" });
-      }
-      // company.invoices.push(req.body);
-      const updatedCompany = await CompanySchema.findOneAndUpdate({ _id: req.body._id }, { $set: req.body });
-      console.log(updatedCompany);
-      res.status(200).json({ message: "Success", data: updatedCompany });
+    const company = await CompanySchema.findById(id);
+    if (!company) {
+      return res.status(404).json({ message: "Company not found" });
     }
+
+    const newInvoice = {
+      ...invoiceData,
+      files: files || [],
+    };
+    company.invoices.push(newInvoice);
+    const updatedCompany = await company.save();
+    res.status(200).json(updatedCompany);
   } catch (error) {
     console.error("Error updating company:", error);
-    res.status(500).json({ message: "Server Error" + error });
+    res.status(500).json({ message: "Server Error" });
   }
 });
+
 
 app.post("/companies/:id", uploadInvoice, async (req, res) => {
   const id = req.params.id;

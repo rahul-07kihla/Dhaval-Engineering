@@ -206,7 +206,6 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, addeditstate, selectedI
       const sesarr = values.ses;
       console.log(sesarr);
       const invoiceData = {
-        _id: entity._id,
         billNo,
         billDetails,
         billAmount,
@@ -229,7 +228,6 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, addeditstate, selectedI
         deductionReason,
         ses: sesarr
       };
-      console.log(invoiceData);
       const formData = new FormData();
       formData.append("invoiceData", JSON.stringify(invoiceData));
       for (let file of files) {
@@ -300,7 +298,7 @@ const NewInvoiceOverlay = ({ hideNewInvoiceForm, entity, addeditstate, selectedI
     }
     formData.append("companyId", entity._id);
     formData.append("invoiceId", selectedInvoice._id);
-
+console.log(formData);
     try {
       const response = await axios.post(
         `http://localhost:4000/update-invoice/`,
